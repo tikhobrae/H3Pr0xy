@@ -5,51 +5,84 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"sync"
+	"time"
+
+	"golang.org/x/net/proxy"
 )
 
-func main() {
-	// The URL containing the SOCKS5 proxy list
-	url := "https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt"
+func checkProxy(proxyAddress string, wg *sync.WaitGroup, workingProxies chan<- string) {
+	defer wg.Done()
 
-	// Create or open the output file
-	filename := "text.txt"
-	file, err := os.Create(filename)
+	dialer, err := proxy.SOCKS5("tcp", proxyAddress, nil, proxy.Direct)
 	if err != nil {
-		fmt.Println("Error creating file:", err)
+		fmt.Printf("Failed to create dialer for proxy %s: %v\n", proxyAddress, err)
+		return
+	}
+
+	httpTransport := &http.Transport{
+		Dial: dialer.Dial,
+	}
+	client := &http.Client{
+		Transport: httpTransport,
+		Timeout:   30 * time.Second,
+	}
+
+	resp, err := client.Get("https://httpbin.org/ip")
+	if err != nil {
+		fmt.Printf("Request failed for proxy %s: %v\n", proxyAddress, err)
+		return
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode == http.StatusOK {
+		fmt.Printf("Proxy %s is working\n", proxyAddress)
+		workingProxies <- proxyAddress
+	} else {
+		fmt.Printf("Proxy %s returned status code: %d\n", proxyAddress, resp.StatusCode)
+	}
+}
+
+func main() {
+	file, err := os.Open("text.txt")
+	if err != nil {
+		fmt.Println("Error opening file:", err)
 		return
 	}
 	defer file.Close()
 
-	// Send HTTP GET request
-	res, err := http.Get(url)
+	outputFile, err := os.Create("working_proxies.txt")
 	if err != nil {
-		fmt.Println("Error fetching URL:", err)
+		fmt.Println("Error creating output file:", err)
 		return
 	}
-	defer res.Body.Close()
+	defer outputFile.Close()
 
-	// Check for HTTP response status
-	if res.StatusCode != http.StatusOK {
-		fmt.Println("Error: status code", res.StatusCode)
-		return
-	}
+	scanner := bufio.NewScanner(file)
+	var wg sync.WaitGroup
+	workingProxies := make(chan string)
 
-	// Use a scanner to read the response body line by line
-	scanner := bufio.NewScanner(res.Body)
-	fmt.Println("save SOCKS5 Proxy in : ", filename)
-	for scanner.Scan() {
-		proxy := scanner.Text() // Read each line (proxy address)
-		// fmt.Println(proxy)      // Print to the terminal
-
-		// Write the proxy address to the file, appending a newline
-		if _, err := file.WriteString(proxy + "\n"); err != nil {
-			fmt.Println("Error writing to file:", err)
-			return
+	go func() {
+		for proxyAddress := range workingProxies {
+			_, err := outputFile.WriteString(proxyAddress + "\n")
+			if err != nil {
+				fmt.Println("Error writing to output file:", err)
+			}
 		}
+	}()
+
+	for scanner.Scan() {
+		proxyAddress := scanner.Text()
+		wg.Add(1)
+		go checkProxy(proxyAddress, &wg, workingProxies)
 	}
 
-	// Check for errors during scanning
 	if err := scanner.Err(); err != nil {
-		fmt.Println("Error reading response body:", err)
+		fmt.Println("Error reading file:", err)
 	}
+
+	wg.Wait()
+	close(workingProxies)
+
+	fmt.Println("Proxy check complete. Check 'working_proxies.txt' for valid proxies.")
 }
