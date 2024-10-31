@@ -1,5 +1,7 @@
 {
     "proxy_path": {
-        "allproxy": "proxy/AllProxy.txt"
+        "allproxy": "proxy/AllProxy.txt",
+        "working": "proxy/working.txt",
+        "lowping": "proxy/lowping.txt"
     }
 }
