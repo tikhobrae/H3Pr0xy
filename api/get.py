@@ -1,10 +1,15 @@
 import requests, json
 
-url = 'http://localhost:5000/time'
 
-respons = requests.get(url)
+def get(num=int):
+    url = f'http://localhost:5000/good'
 
-# j = respons.josn().get('time')
-# print(j.get())
+    respons = requests.get(url).json()
 
-print(respons.headers['content-type'], respons.text)
+    # j = respons.josn().get('time')
+    # print(j.get())
+
+    return respons.get('ip') +':'+ respons.get('port')
+
+x = get()
+print(x)
