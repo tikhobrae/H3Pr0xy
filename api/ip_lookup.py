@@ -21,8 +21,6 @@ class IPLookup:
                 "country": response.country.name,
                 "country_code": response.country.iso_code,
                 "city": response.city.name,
-                "latitude": response.location.latitude,
-                "longitude": response.location.longitude,
             }
             return ip_info
         except geoip2.errors.AddressNotFoundError:

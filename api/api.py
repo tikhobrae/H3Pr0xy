@@ -29,39 +29,31 @@ def get_proxy():
 @app.route('/good', methods=['GET'])
 def get_good():
     num = request.args.get('num', default=1, type=int)
-    proxy = load.load(num, type='good')
-    ip_info = ip_lookup.get_ip_info(proxy[0].split(':')[0])
-    
-    try:
-        return jsonify({
-            'ip': ip_info.get('ip'),
-            'country': ip_info.get('country'),
-            'cc': ip_info.get('country_code'),
-            'port': proxy[0].split(':')[1]
-        })
-    except:
-        return jsonify({'error': 'Eroooor'})
-    
-    # proxies = {
-    #     'http': f'socks5://{proxy[0]}',
-    #     'https': f'socks5://{proxy[0]}'
-    # }
+    proxies_list = load.load(num, type='good')
 
-    # try:
-    #     response = requests.get('https://ipinfo.io/json', proxies=proxies, timeout=8)
-    #     response.raise_for_status() 
+    for proxy in proxies_list:
+        proxies = {
+            'http': f'socks5://{proxy}',
+            'https': f'socks5://{proxy}'
+        }
+        try:
+            response = requests.get('https://httpbin.org/ip', proxies=proxies, timeout=10)
+            response.raise_for_status() 
+            
+            if response.status_code == 200:
+                ip_info = ip_lookup.get_ip_info(proxy.split(':')[0])
+                return jsonify({
+                    'ip': ip_info.get('ip'),
+                    'country': ip_info.get('country'),
+                    'cc': ip_info.get('country_code'),
+                    'port': proxy.split(':')[1]
+                })
         
-    #     data = response.json()
-    #     return jsonify({
-    #         'ip': data.get('ip'),
-    #         'country': data.get('city'),
-    #         'region': data.get('region'),
-    #         'cc': data.get('country'),
-    #         'port': proxy[0].split(':')[1]
-    #     })
+        except requests.RequestException:
+            load.remove(proxy_type='good', which=proxy)
+            continue  
 
-    # except requests.RequestException as e:
-    #     return jsonify({'error': str(e)}, {'ip': proxy}), 500
+    return jsonify({'error': 'No valid proxy available'}), 500
 
 
 if __name__ == '__main__':
