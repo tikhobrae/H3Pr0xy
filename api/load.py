@@ -44,3 +44,22 @@ def load(num, type=str) -> list:
     
     result = random.sample(proxies, num)
     return result
+
+def remove(proxy_type=str, which=str) -> None:
+
+    if proxy_type == 'best':
+        avail_type = 'lowping'
+    elif proxy_type == 'good':
+        avail_type = 'working'
+    elif proxy_type == 'all':
+        avail_type = 'allproxy'
+    else:
+        raise ValueError('check proxy Type!')
+
+    proxy_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', config['proxy_path'][avail_type])
+    
+    with open(proxy_path, "r") as file:
+        lines = file.readlines()
+    new_lines = [line for line in lines if which not in line]
+    with open(proxy_path, "w") as file:
+        file.writelines(new_lines)
