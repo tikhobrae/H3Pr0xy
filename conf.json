@@ -1,0 +1,5 @@
+{
+    "proxy_path": {
+        "allproxy": "proxy/AllProxy.txt"
+    }
+}
