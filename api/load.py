@@ -1,7 +1,6 @@
 import json
 import os
 
-# تعیین مسیر config.json
 config_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'conf.json')
 
 def load_config(file_path=config_path):
@@ -11,12 +10,10 @@ def load_config(file_path=config_path):
 
 config = load_config()
 
-def get() -> list:
-    # تعیین مسیر به صورت مطلق برای AllProxy.txt
-    allproxy_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', config['proxy_path']['allproxy'])
+def get(proxy_type=str) -> list:
+    proxy_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', config['proxy_path'][proxy_type])
     
-    with open(allproxy_path, 'r') as file:
-        # خواندن خطوط و تمیز کردن آنها
+    with open(proxy_path, 'r') as file:
         get = file.readlines()
         cleaned_lines = [line.strip() for line in get if line.strip()]  # حذف خطوط خالی و کاراکترهای اضافی
     return cleaned_lines
@@ -26,6 +23,6 @@ def load(num) -> list:
     for count, proxy in enumerate(get()):
         if count >= num:
             break
-        result.append(proxy)  # اضافه کردن هر پروکسی به لیست
-    return result  # برگرداندن لیست
+        result.append(proxy)  
+    return result  
 

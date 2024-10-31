@@ -16,14 +16,13 @@ def get_time():
     return jsonify(time.ctime())
 
 
-@app.route('/avl')
+@app.route('/getproxy')
 def get_proxy():
     num = request.args.get('num', default=1, type=int)  
-    
     proxy = load.load(num)
+    return jsonify(proxy)
 
 
-    return jsonify('proxy', proxy)
 
 if __name__ == '__main__':
     app.run(debug=True)
