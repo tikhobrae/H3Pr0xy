@@ -28,7 +28,7 @@ def get_proxy():
 
 @app.route('/good', methods=['GET'])
 def get_good():
-    num = request.args.get('num', default=1, type=int)
+    num = request.args.get('num', default=3, type=int)
     proxies_list = load.load(num, type='good')
 
     for proxy in proxies_list:
@@ -37,7 +37,7 @@ def get_good():
             'https': f'socks5://{proxy}'
         }
         try:
-            response = requests.get('https://httpbin.org/ip', proxies=proxies, timeout=10)
+            response = requests.get('https://httpbin.org/ip', proxies=proxies, timeout=5)
             response.raise_for_status() 
             
             if response.status_code == 200:
