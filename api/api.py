@@ -48,7 +48,6 @@ def get_good():
                     'cc': ip_info.get('country_code'),
                     'port': proxy.split(':')[1]
                 })
-        
         except requests.RequestException:
             load.remove(proxy_type='good', which=proxy)
             continue  
