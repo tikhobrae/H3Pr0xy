@@ -1,7 +1,7 @@
 import json
 import os
 import random
-config_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'conf.json')
+config_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..','conf.json')
 
 def load_config(file_path=config_path) -> json:
     with open(file_path, 'r') as conf:
@@ -21,7 +21,7 @@ def get(proxy_type=str) -> list:
     else:
         raise ValueError('check proxy Type!')
 
-    proxy_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', config['proxy_path'][avail_type])
+    proxy_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', config['proxy_path'][avail_type])
     
     with open(proxy_path, 'r') as file:
         get = file.readlines()
@@ -56,7 +56,7 @@ def remove(proxy_type=str, which=str) -> None:
     else:
         raise ValueError('check proxy Type!')
 
-    proxy_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', config['proxy_path'][avail_type])
+    proxy_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', config['proxy_path'][avail_type])
     
     with open(proxy_path, "r") as file:
         lines = file.readlines()
