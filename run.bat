@@ -1,10 +1,16 @@
 @echo off
+REM Prompt user for command to run
+set /p command=Enter Command for run: 
+REM Prompt user for time interval in seconds
+set /p time=Enter time(s): 
 
-set /p command=Enter Command for run >>>
-set /p time=Enter time(s) >>>
 :loop
-echo "-"*20
-echo "Run"
+REM Print a separator line
+echo --------------------
+echo Running command: %command%
+REM Execute the command
 %command%
-timeout /t %time% /nobreak > null
+REM Wait for the specified time without breaking
+timeout /t %time% /nobreak > nul
+REM Loop back to the beginning
 goto loop

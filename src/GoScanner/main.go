@@ -17,7 +17,7 @@ import (
 	"github.com/oschwald/geoip2-golang"
 )
 
-// ساختار برای اطلاعات IP
+// IPInfo holds information about an IP address
 type IPInfo struct {
 	IP          string `json:"ip"`
 	Country     string `json:"country"`
@@ -25,21 +25,24 @@ type IPInfo struct {
 	City        string `json:"city"`
 }
 
-// ساختار برای مدیریت اطلاعات IP
+// IPLookup is responsible for looking up IP information
 type IPLookup struct {
 	Reader *geoip2.Reader
 }
 
-// تابع برای ایجاد یک نمونه جدید از IPLookup
+// NewIPLookup initializes a new IPLookup instance
 func NewIPLookup(dbPath string) (*IPLookup, error) {
+	// Set default database path if not provided
 	if dbPath == "" {
-		dbPath = "ip_db/GeoLite2-City.mmdb" // مسیر پیش‌فرض به پایگاه داده
+		dbPath = "ip_db/GeoLite2-City.mmdb"
 	}
 
+	// Check if the database file exists
 	if _, err := os.Stat(dbPath); os.IsNotExist(err) {
 		return nil, errors.New("database file not found at " + dbPath)
 	}
 
+	// Open the GeoIP database
 	reader, err := geoip2.Open(dbPath)
 	if err != nil {
 		return nil, err
@@ -48,16 +51,17 @@ func NewIPLookup(dbPath string) (*IPLookup, error) {
 	return &IPLookup{Reader: reader}, nil
 }
 
-// تابع برای دریافت اطلاعات IP
+// GetIPInfo retrieves information for a given IP address
 func (ipl *IPLookup) GetIPInfo(ipAddress string) (IPInfo, error) {
-	ip := net.ParseIP(ipAddress) // تبدیل string به net.IP
+	ip := net.ParseIP(ipAddress)
 	if ip == nil {
 		return IPInfo{}, errors.New("invalid IP address format")
 	}
 
-	record, err := ipl.Reader.City(ip) // استفاده از net.IP
+	// Lookup the IP address in the GeoIP database
+	record, err := ipl.Reader.City(ip)
 	if err != nil {
-		return IPInfo{}, err // در اینجا می‌توانید خطا را مدیریت کنید
+		return IPInfo{}, err
 	}
 
 	ipInfo := IPInfo{
@@ -69,18 +73,20 @@ func (ipl *IPLookup) GetIPInfo(ipAddress string) (IPInfo, error) {
 	return ipInfo, nil
 }
 
+// Close closes the IPLookup reader
 func (ipl *IPLookup) Close() {
 	ipl.Reader.Close()
 }
 
-// بارگذاری پروکسی‌ها
 var config map[string]interface{}
 
 func init() {
+	// Load configuration from a JSON file
 	configPath := filepath.Join("..", "..", "conf.json")
 	loadConfig(configPath)
 }
 
+// loadConfig reads the configuration from the specified file path
 func loadConfig(filePath string) {
 	file, _ := os.Open(filePath)
 	defer file.Close()
@@ -88,6 +94,7 @@ func loadConfig(filePath string) {
 	json.Unmarshal(data, &config)
 }
 
+// getProxies retrieves proxies based on the specified type
 func getProxies(proxyType string) []string {
 	var availType string
 	switch proxyType {
@@ -109,6 +116,7 @@ func getProxies(proxyType string) []string {
 	return cleanLines(string(lines))
 }
 
+// cleanLines removes empty lines and whitespace from the proxy list
 func cleanLines(content string) []string {
 	var cleanedLines []string
 	for _, line := range strings.Split(content, "\n") {
@@ -119,6 +127,7 @@ func cleanLines(content string) []string {
 	return cleanedLines
 }
 
+// loadProxies loads a specified number of proxies and randomizes their order
 func loadProxies(num int, proxyType string) []string {
 	proxies := getProxies(proxyType)
 	if num > len(proxies) {
@@ -131,44 +140,44 @@ func loadProxies(num int, proxyType string) []string {
 	return proxies[:num]
 }
 
+// helloHandler responds with a welcome message
 func helloHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Welcome, to H3Pr0xy!"))
 }
 
+// getTimeHandler responds with the current server time
 func getTimeHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(time.Now().Format(time.RFC1123))
 }
 
+// getProxyHandler retrieves a list of proxies based on the specified number
 func getProxyHandler(w http.ResponseWriter, r *http.Request) {
-	// تنظیم نوع پاسخ به JSON
 	w.Header().Set("Content-Type", "application/json")
 
-	// دریافت پارامتر num از درخواست و تبدیل به عدد
 	numStr := r.URL.Query().Get("num")
 	num, err := strconv.Atoi(numStr)
-	if err != nil || num <= 0 { // بررسی مقدار نامعتبر
-		num = 20 // مقدار پیش‌فرض
+	if err != nil || num <= 0 {
+		num = 20 // Default number of proxies
 	}
 
-	// بارگذاری پروکسی‌ها
 	proxies := loadProxies(num, "all")
 
-	// بازگردانی نتیجه به صورت JSON
 	response := map[string]interface{}{"proxy": proxies}
 	if err := json.NewEncoder(w).Encode(response); err != nil {
-		http.Error(w, "خطا در پردازش پاسخ JSON", http.StatusInternalServerError)
+		http.Error(w, "Error processing JSON response", http.StatusInternalServerError)
 	}
 }
 
+// getGoodHandler checks for good proxies and returns IP information
 func getGoodHandler(w http.ResponseWriter, r *http.Request) {
 	numStr := r.URL.Query().Get("num")
-	num, err := strconv.Atoi(numStr) // تبدیل num به int
+	num, err := strconv.Atoi(numStr)
 	if err != nil {
-		num = 3 // مقدار پیش‌فرض در صورت بروز خطا
+		num = 3 // Default number of good proxies
 	}
-	proxiesList := loadProxies(num, "good") // بارگذاری پروکسی‌های خوب
+	proxiesList := loadProxies(num, "good")
 
-	ipLookup, err := NewIPLookup("") // در اینجا می‌توانید مسیر پایگاه داده خود را وارد کنید
+	ipLookup, err := NewIPLookup("") // Initialize IPLookup
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -177,7 +186,7 @@ func getGoodHandler(w http.ResponseWriter, r *http.Request) {
 
 	for _, proxy := range proxiesList {
 		client := &http.Client{
-			Timeout: time.Second * 5,
+			Timeout: time.Second * 5, // Set a timeout for the request
 		}
 
 		req, err := http.NewRequest("GET", "https://httpbin.org/ip", nil)
@@ -185,21 +194,23 @@ func getGoodHandler(w http.ResponseWriter, r *http.Request) {
 			continue
 		}
 
-		req.Header.Set("Proxy", "socks5://"+proxy) // تنظیم پروکسی
+		// Set the proxy for the request
+		req.Header.Set("Proxy", "socks5://"+proxy)
 		resp, err := client.Do(req)
 		if err != nil {
-			continue // بارگذاری پروکسی نامعتبر
+			continue
 		}
 		defer resp.Body.Close()
 
+		// If the response is OK, retrieve the IP information
 		if resp.StatusCode == http.StatusOK {
-			ipInfo, _ := ipLookup.GetIPInfo(proxy) // دریافت اطلاعات IP
+			ipInfo, _ := ipLookup.GetIPInfo(proxy)
 
 			json.NewEncoder(w).Encode(map[string]interface{}{
 				"ip":      ipInfo.IP,
 				"country": ipInfo.Country,
 				"cc":      ipInfo.CountryCode,
-				"port":    proxy, // یا اگر بخواهید فقط پورت را دریافت کنید
+				"port":    proxy,
 			})
 			return
 		}
@@ -208,11 +219,13 @@ func getGoodHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	// Set up the router and define the routes
 	router := mux.NewRouter()
 	router.HandleFunc("/", helloHandler).Methods("GET")
 	router.HandleFunc("/time", getTimeHandler).Methods("GET")
 	router.HandleFunc("/getproxy", getProxyHandler).Methods("GET")
 	router.HandleFunc("/good", getGoodHandler).Methods("GET")
 
+	// Start the HTTP server
 	http.ListenAndServe(":8080", router)
 }
