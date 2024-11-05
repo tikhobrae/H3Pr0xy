@@ -159,7 +159,11 @@ cython_debug/
 # AllProxy.txt
 test.py
 .vscode
-go/go.sum
+go.sum
+GET.py
+socks5.txt
+socks4.txt
+http.txt
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
 #  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore

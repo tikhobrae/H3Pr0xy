@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/projectdiscovery/gologger"
-	"github.com/kitabisa/mubeng/internal/runner"
+	"github.com/tikhobrae/H3Pr0xy/tree/main/src/GoScanner/internal/runner"
 )
 
 func main() {

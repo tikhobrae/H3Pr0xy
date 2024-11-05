@@ -1,21 +1,17 @@
 #!/bin/bash
 
-# Prompt user for command and time interval
-read -p "Enter Command for run >>> " command
-read -p "Enter time(s) >>> " time
+VENV_PATH="venv/bin/activate"
 
-# Initialize a counter for runs
-allrun=0
+if [ -f "$VENV_PATH" ]; then
+    echo "Activating Python virtual environment..."
+    source "$VENV_PATH"
+else
+    echo "Python virtual environment not found. Please set up your environment first."
+    exit 1
+fi
 
-# Infinite loop
-while true; do
-    ((allrun++))  # Increment the counter
-    echo "---------'$allrun'-----------"  # Display the count
-    echo "Run"
+TARGET_DIR="src/GoScanner"
+cd "$TARGET_DIR" || { echo "Directory not found: $TARGET_DIR"; exit 1; }
 
-    # Execute the command
-    eval "$command"
-
-    # Wait for the specified time
-    sleep "$time"
-done
+echo "Running Go script..."
+go run run.go

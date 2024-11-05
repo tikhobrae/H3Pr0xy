@@ -8,7 +8,7 @@ import (
 
 	"github.com/projectdiscovery/gologger"
 	"github.com/tcnksm/go-latest"
-	"github.com/kitabisa/mubeng/common"
+	"github.com/tikhobrae/H3Pr0xy/tree/main/src/GoScanner/common"
 )
 
 // isLatest check if current version is latest

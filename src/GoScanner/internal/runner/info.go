@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/logrusorgru/aurora"
-	"github.com/kitabisa/mubeng/common"
+	"github.com/tikhobrae/H3Pr0xy/tree/main/src/GoScanner/common"
 )
 
 // showBanner to stderr

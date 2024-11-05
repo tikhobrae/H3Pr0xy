@@ -2,7 +2,7 @@ package daemon
 
 import (
 	// "github.com/kardianos/service"
-	"github.com/kitabisa/mubeng/common"
+	"github.com/tikhobrae/H3Pr0xy/tree/main/src/GoScanner/common"
 )
 
 func init() {

@@ -8,8 +8,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/kitabisa/mubeng/common"
-	"github.com/kitabisa/mubeng/internal/proxymanager"
+	"github.com/tikhobrae/H3Pr0xy/tree/main/src/GoScanner/common"
+	"github.com/tikhobrae/H3Pr0xy/tree/main/src/GoScanner/internal/proxymanager"
 )
 
 // validate user-supplied option values before Runner.

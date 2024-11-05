@@ -4,7 +4,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/kitabisa/mubeng/internal/proxymanager"
+	"github.com/tikhobrae/H3Pr0xy/tree/main/src/GoScanner/internal/proxymanager"
 )
 
 // Options consists of the configuration required.

@@ -4,9 +4,9 @@ import (
 	"flag"
 	"time"
 
-	"github.com/kitabisa/mubeng/common"
-	"github.com/kitabisa/mubeng/internal/updater"
 	"github.com/projectdiscovery/gologger"
+	"github.com/tikhobrae/H3Pr0xy/tree/main/src/GoScanner/common"
+	"github.com/tikhobrae/H3Pr0xy/tree/main/src/GoScanner/internal/updater"
 )
 
 // Options defines the values needed to execute the Runner.

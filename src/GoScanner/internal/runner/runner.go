@@ -3,10 +3,10 @@ package runner
 import (
 	"errors"
 
-	"github.com/kitabisa/mubeng/common"
-	"github.com/kitabisa/mubeng/internal/checker"
-	"github.com/kitabisa/mubeng/internal/daemon"
-	"github.com/kitabisa/mubeng/internal/server"
+	"github.com/tikhobrae/H3Pr0xy/tree/main/src/GoScanner/common"
+	"github.com/tikhobrae/H3Pr0xy/tree/main/src/GoScanner/internal/checker"
+	"github.com/tikhobrae/H3Pr0xy/tree/main/src/GoScanner/internal/daemon"
+	"github.com/tikhobrae/H3Pr0xy/tree/main/src/GoScanner/internal/server"
 )
 
 // New to switch an action, whether to check or run a proxy server.

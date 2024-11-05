@@ -10,8 +10,8 @@ import (
 
 	"github.com/elazarl/goproxy"
 	"github.com/hashicorp/go-retryablehttp"
-	"github.com/kitabisa/mubeng/common"
-	"github.com/kitabisa/mubeng/pkg/mubeng"
+	"github.com/tikhobrae/H3Pr0xy/tree/main/src/GoScanner/common"
+	"github.com/tikhobrae/H3Pr0xy/tree/main/src/GoScanner/pkg/mubeng"
 )
 
 // onRequest handles client request

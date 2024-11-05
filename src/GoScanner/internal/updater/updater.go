@@ -14,7 +14,7 @@ import (
 	"github.com/inconshreveable/go-update"
 	"github.com/logrusorgru/aurora"
 	"github.com/projectdiscovery/gologger"
-	"github.com/kitabisa/mubeng/common"
+	"github.com/tikhobrae/H3Pr0xy/tree/main/src/GoScanner/common"
 )
 
 // New to initialize updater, such as:

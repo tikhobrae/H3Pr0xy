@@ -7,8 +7,8 @@ import (
 
 	"github.com/elazarl/goproxy"
 	"github.com/henvic/httpretty"
-	"github.com/kitabisa/mubeng/common"
 	"github.com/mbndr/logo"
+	"github.com/tikhobrae/H3Pr0xy/tree/main/src/GoScanner/common"
 )
 
 // Run proxy server with a user defined listener.

@@ -7,8 +7,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/kitabisa/mubeng/pkg/helper"
-	"github.com/kitabisa/mubeng/pkg/mubeng"
+	"github.com/tikhobrae/H3Pr0xy/tree/main/src/GoScanner/pkg/helper"
+	"github.com/tikhobrae/H3Pr0xy/tree/main/src/GoScanner/pkg/mubeng"
 )
 
 // ProxyManager defines the proxy list and current proxy position

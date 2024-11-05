@@ -2,7 +2,7 @@ package server
 
 import (
 	"github.com/elazarl/goproxy"
-	"github.com/kitabisa/mubeng/common"
+	"github.com/tikhobrae/H3Pr0xy/tree/main/src/GoScanner/common"
 )
 
 // Proxy as ServeMux in proxy server handler.

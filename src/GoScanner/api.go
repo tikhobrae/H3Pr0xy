@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"math/rand"
 	"net"
@@ -228,4 +229,5 @@ func main() {
 
 	// Start the HTTP server
 	http.ListenAndServe(":8080", router)
+	fmt.Println("Run API on: 8080")
 }

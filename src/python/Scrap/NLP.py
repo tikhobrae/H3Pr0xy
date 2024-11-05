@@ -4,7 +4,7 @@ import base64
 import random
 from transformers import pipeline
 
-GITHUB_TOKEN = 'your_github_token_here'  # Insert your token here
+GITHUB_TOKEN = 'GitHub Api Key'  # Insert your token here
 headers = {
     "Authorization": f"token {GITHUB_TOKEN}",
     "Accept": "application/vnd.github.v3+json"
@@ -14,11 +14,11 @@ headers = {
 search_queries = [
     "socks5 list",
     "free proxy list",
-    "public proxy repository",
-    "proxy server list",
-    "http proxies",
-    "socks4 proxies",
-    "proxy collection"
+    # "public proxy repository",
+    # "proxy server list",
+    # "http proxies",
+    # "socks4 proxies",
+    # "proxy collection"
 ]
 
 # Natural language processing model
@@ -140,7 +140,7 @@ if __name__ == "__main__":
         if proxies:
             with open(f"{proxy_type}.txt", "w", encoding="utf-8") as f:
                 for proxy in proxies:
-                    f.write(proxy + "\n")
+                    f.write(f"{proxy_type}://{proxy}" + "\n")
             print(f"> Saved {len(proxies)} {proxy_type} proxies to {proxy_type}.txt")
         else:
             print(f"No proxies found for {proxy_type}")

@@ -5,8 +5,8 @@ import (
 	"math/rand"
 
 	"github.com/fsnotify/fsnotify"
-	"github.com/kitabisa/mubeng/common/errors"
-	"github.com/kitabisa/mubeng/pkg/helper"
+	"github.com/tikhobrae/H3Pr0xy/tree/main/src/GoScanner/common/errors"
+	"github.com/tikhobrae/H3Pr0xy/tree/main/src/GoScanner/pkg/helper"
 )
 
 // Count counts total proxies

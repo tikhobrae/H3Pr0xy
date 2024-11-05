@@ -1,16 +1,24 @@
 @echo off
-REM Prompt user for command to run
-set /p command=Enter Command for run: 
-REM Prompt user for time interval in seconds
-set /p time=Enter time(s): 
+setlocal
 
-:loop
-REM Print a separator line
-echo --------------------
-echo Running command: %command%
-REM Execute the command
-%command%
-REM Wait for the specified time without breaking
-timeout /t %time% /nobreak > nul
-REM Loop back to the beginning
-goto loop
+set VENV_PATH=venv\Scripts\activate.bat
+
+if exist %VENV_PATH% (
+    echo Activating Python virtual environment...
+    call %VENV_PATH%
+) else (
+    echo Python virtual environment not found. Please set up your environment first.
+    exit /b 1
+)
+
+set TARGET_DIR=src\GoScanner
+pushd %TARGET_DIR%
+if %errorlevel% neq 0 (
+    echo Directory not found: %TARGET_DIR%
+    exit /b 1
+)
+
+echo Running Go script...
+go run run.go
+
+popd
