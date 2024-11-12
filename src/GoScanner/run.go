@@ -64,7 +64,7 @@ func runScripts(g *gocui.Gui) {
 	var wg sync.WaitGroup
 
 	wg.Add(3)
-	go runScript(g, "python", "../python/Scrap/NLP.py", "", "left_top", &wg)
+	go runScript(g, "python", "../python/AIShield/src/NLP.py", "", "left_top", &wg)
 	go runScript(g, "go", "run", "api.go", "right", &wg)
 	go runScript(g, ".\\mubeng.bat", "", "", "left_bottom", &wg)
 
